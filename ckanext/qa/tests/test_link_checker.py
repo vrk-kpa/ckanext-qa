@@ -90,9 +90,19 @@ class TestLinkChecker(object):
     def test_file_url(self, client, app):
         url = u'file:///home/root/test.txt'
         result = self.check_link(url, None, app)
-        log.debug(result)
-        assert_in(u'Invalid url scheme. Please use one of: http ftp https',
-                  result['url_errors'])
+
+        # htt/https comes in random order in url_errors so check if any possible format is used in url_error
+        schemes = [u'http ftp https', u'http https ftp', u'https ftp http', u'https http ftp', u'ftp https http',
+                   u'ftp http https']
+        for scheme in schemes:
+            if u'Invalid url scheme. Please use one of: %s' % scheme in result['url_errors']:
+                format_in_use = u'Invalid url scheme. Please use one of: %s' % scheme
+                break
+
+        if format_in_use:
+            assert_in(format_in_use, result['url_errors'])
+        else:
+            pytest.fail(f"Link check failed {result['url_errors']}")
 
     def test_empty_url(self, client, app):
         url = u''
