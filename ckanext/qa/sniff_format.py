@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from io import BytesIO
+from io import BytesIO, open
 import sys
 import re
 import zipfile

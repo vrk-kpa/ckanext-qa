@@ -91,7 +91,8 @@ class TestLinkChecker(object):
         url = u'file:///home/root/test.txt'
         result = self.check_link(url, None, app)
 
-        # htt/https comes in random order in url_errors so check if any possible format is used in url_error
+        format_in_use = None
+        # htt/https/ftp comes in random order in url_errors so check if any possible format is used in url_error
         schemes = [u'http ftp https', u'http https ftp', u'https ftp http', u'https http ftp', u'ftp https http',
                    u'ftp http https']
         for scheme in schemes:
@@ -102,7 +103,7 @@ class TestLinkChecker(object):
         if format_in_use:
             assert_in(format_in_use, result['url_errors'])
         else:
-            pytest.fail(f"Link check failed {result['url_errors']}")
+            pytest.fail("Link check failed {}".format(result['url_errors']))
 
     def test_empty_url(self, client, app):
         url = u''
