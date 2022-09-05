@@ -1,6 +1,5 @@
 import pytest
 import logging
-from functools import wraps
 import json
 from nose.tools import assert_in
 
@@ -11,8 +10,6 @@ except ImportError:
 
 from ckanext.archiver.tasks import update_package
 
-from .mock_remote_server import MockEchoTestServer
-
 # enable celery logging for when you run nosetests -s
 log = logging.getLogger('ckanext.archiver.tasks')
 
@@ -22,19 +19,6 @@ def get_logger():
 
 
 update_package.get_logger = get_logger
-
-
-def with_mock_url(url=''):
-    """
-    Start a MockEchoTestServer call the decorated function with the server's address prepended to ``url``.
-    """
-    def decorator(func):
-        @wraps(func)
-        def decorated(*args, **kwargs):
-            with MockEchoTestServer().serve() as serveraddr:
-                return func(*(args + ('%s/%s' % (serveraddr, url),)), **kwargs)
-        return decorated
-    return decorator
 
 
 @pytest.mark.usefixtures('with_plugins')
