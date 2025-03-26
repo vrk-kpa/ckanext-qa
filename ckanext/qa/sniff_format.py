@@ -74,18 +74,24 @@ def sniff_file_format(filepath):
                 buf = f.read(100)
             if is_iati(buf):
                 format_ = {'format': 'IATI'}
+        elif mime_type == 'application/javascript':
+            # Script-heavy HTML pages can be mistaken for JavaScript
+            with open(filepath, 'r', encoding='ISO-8859-1') as f:
+                buf = f.read(100)
+            for tag in ['<!DOCTYPE html', '<html', '<head', '<body']:
+                if tag in buf:
+                    format_ = {'format': 'HTML'}
+                    break
         elif mime_type == 'application/csv':
             if is_csv(filepath, qsv_bin):
                 format_ = {'format': 'CSV'}
             elif is_psv(filepath, qsv_bin):
                 format_ = {'format': 'PSV'}
 
-        if format_:
-            return format_
-
-        format_tuple = ckan_helpers.resource_formats().get(mime_type)
-        if format_tuple:
-            format_ = {'format': format_tuple[1]}
+        if not format_:
+            format_tuple = ckan_helpers.resource_formats().get(mime_type)
+            if format_tuple:
+                format_ = {'format': format_tuple[1]}
 
         if not format_:
             if mime_type.startswith('text/'):
