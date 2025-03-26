@@ -57,8 +57,8 @@ jobs:
         run: |
           apt install unzip
           wget https://github.com/jqnatividad/qsv/releases/download/0.101.0/qsv-0.101.0-x86_64-unknown-linux-musl.zip
-          unzip qsv-0.101.0-x86_64-unknown-linux-musl.zip -d qsvbin
-          echo "$GITHUB_WORKSPACE/qsvbin" >> $GITHUB_PATH
+          unzip qsv-0.101.0-x86_64-unknown-linux-musl.zip -d ${{ runner.temp }}/qsvbin
+          echo "${{ runner.temp }}/qsvbin" >> $GITHUB_PATH
 
       - run: qsv --version
 
