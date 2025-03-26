@@ -32,6 +32,7 @@ Requirements
 Before installing ckanext-qa, make sure that you have installed the following:
 
 * CKAN 2.1+ (tests are only running for CKAN 2.7+)
+* QSV (https://github.com/dathere/qsv) identifying files
 * ckanext-archiver 2.0+ (https://github.com/ckan/ckanext-archiver)
 * ckanext-report (https://github.com/datagovuk/ckanext-report) for reporting
 
@@ -59,13 +60,15 @@ To install ckanext-qa, ensure you have previously installed ckanext-archiver (v2
 
 4. Now create the database tables::
 
-     paster --plugin=ckanext-qa qa init --config=production.ini
+     ckan -c ckan.ini qa init
 
 5. Add ``qa`` to the ``ckan.plugins`` setting BEFORE ``archiver`` in your CKAN
    config file (by default the config file is located at
-   ``/etc/ckan/default/production.ini``).
+   ``/etc/ckan/default/ckan.ini``).
 
-6. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+6. Add ``qsv`` binary path to ``ckanext.qa.qsv_bin`` config variable.
+
+7. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
      sudo service apache2 reload
 
