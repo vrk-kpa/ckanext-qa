@@ -1,7 +1,4 @@
-SQLAlchemy>=0.6.6
-requests
 progressbar
 six>=1.9  # until messytables->html5lib releases https://github.com/html5lib/html5lib-python/pull/301
 xlrd==2.0.1
-python-magic
 progressbar2==3.53.3
