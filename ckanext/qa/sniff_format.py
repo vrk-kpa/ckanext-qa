@@ -509,10 +509,8 @@ def is_excel(filepath, qsv_bin):
     result = json.loads(result.stdout)
     detected_mime_type = result.get('meta', {}).get('detected_mime_type')
     if (detected_mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or
-        detected_mime_type == 'application/vnd.ms-excel'):
+            detected_mime_type == 'application/vnd.ms-excel'):
         return True
-
-
 
 
 # same as the python 2.7 subprocess.check_output
