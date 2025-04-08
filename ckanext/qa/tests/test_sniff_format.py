@@ -71,6 +71,9 @@ class TestSniffFormat:
     def test_xls3(self):
         self.check_format('xlsx', 'decc_local_authority_data_xlsx.xls')
 
+    def test_xls4(self):
+        self.check_format('xlsx', 'insurance_sample.xlsx')
+
     def test_xls_zip(self):
         self.check_format('xls.zip', 'telephone-network-data.xls.zip')
 
