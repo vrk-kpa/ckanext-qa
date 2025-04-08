@@ -8,7 +8,6 @@ import os
 from collections import defaultdict
 import subprocess
 
-import xlrd
 import magic
 
 from ckan.lib import helpers as ckan_helpers
@@ -55,11 +54,11 @@ def sniff_file_format(filepath):
             # In the past Magic gives the msword mime-type for Word and other
             # MS Office files too, so use BSD File to be sure which it is.
             format_ = run_bsd_file(filepath)
-            if not format_ and is_excel(filepath):
+            if not format_ and is_excel(filepath, qsv_bin):
                 format_ = {'format': 'XLS'}
         elif mime_type == 'application/octet-stream':
             # Excel files sometimes come up as this
-            if is_excel(filepath):
+            if is_excel(filepath, qsv_bin):
                 format_ = {'format': 'XLS'}
             else:
                 # e.g. Shapefile
@@ -140,7 +139,7 @@ def sniff_file_format(filepath):
 
     else:
         # Excel files sometimes not picked up by magic, so try alternative
-        if is_excel(filepath):
+        if is_excel(filepath, qsv_bin):
             format_ = {'format': 'XLS'}
         # BSD file picks up some files that Magic misses
         # e.g. some MS Word files
@@ -490,15 +489,30 @@ def get_zipped_format(filepath):
     return format_
 
 
-def is_excel(filepath):
+def is_excel(filepath, qsv_bin):
     try:
-        xlrd.open_workbook(filepath)
-    except Exception as e:
+        result = subprocess.run(
+            [
+                qsv_bin,
+                "sniff",
+                "--json",
+                "--no-infer",
+                filepath,
+            ],
+            check=True,
+            stdout=subprocess.PIPE
+        )
+    except subprocess.CalledProcessError as e:
         log.info('Not Excel - failed to load: %s %s', e, e.args)
         return False
-    else:
-        log.info('Excel file opened successfully')
+
+    result = json.loads(result.stdout)
+    detected_mime_type = result.get('meta', {}).get('detected_mime_type')
+    if (detected_mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or
+        detected_mime_type == 'application/vnd.ms-excel'):
         return True
+
+
 
 
 # same as the python 2.7 subprocess.check_output
