@@ -80,3 +80,19 @@ jobs:
 
       - name: Run tests
         run: pytest --ckan-ini=test.ini --cov=ckanext.qa --disable-warnings ckanext/qa/tests
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        if: ${{ !cancelled() }}
+        continue-on-error: true #don't fail if we can't upload (ie a fork that does not have integration plugged in)
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: false # optional (default = false)
+
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        if: ${{ !cancelled() }}
+        continue-on-error: true #don't fail if we can't upload (ie a fork that does not have integration plugged in)
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: false # optional (default = false)
