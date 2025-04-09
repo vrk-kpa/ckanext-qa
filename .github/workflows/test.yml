@@ -83,7 +83,7 @@ jobs:
 
       - name: install codecov requirements
         run: |
-          apt install curl gpg
+          apt install -y curl gpg
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
