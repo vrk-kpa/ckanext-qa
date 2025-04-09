@@ -21,7 +21,16 @@ if toolkit.check_ckan_version(min_version='2.9.0'):
 else:
     from ckanext.qa.plugin.pylons_plugin import MixinPlugin
 
+try:
+    config_declarations = toolkit.blanket.config_declarations
+except AttributeError:
+    # CKAN 2.9 does not have config_declarations.
+    # Remove when dropping support.
+    def config_declarations(cls):
+        return cls
 
+
+@config_declarations
 class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(IPipe, inherit=True)
