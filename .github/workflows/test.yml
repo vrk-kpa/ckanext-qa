@@ -79,7 +79,7 @@ jobs:
           ckan -c test.ini qa init
 
       - name: Run tests
-        run: pytest --ckan-ini=test.ini --cov=ckanext.qa --disable-warnings ckanext/qa/tests
+        run: pytest --ckan-ini=test.ini --cov=ckanext.qa --disable-warnings ckanext/qa/tests --junitxml=junit.xml -o junit_family=legacy
 
       - name: install codecov requirements
         run: |
