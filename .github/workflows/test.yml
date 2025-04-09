@@ -81,6 +81,10 @@ jobs:
       - name: Run tests
         run: pytest --ckan-ini=test.ini --cov=ckanext.qa --disable-warnings ckanext/qa/tests
 
+      - name: install codecov requirements
+        run: |
+          apt install curl gpg
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         if: ${{ !cancelled() }}
