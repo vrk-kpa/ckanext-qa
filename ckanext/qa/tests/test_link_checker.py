@@ -1,7 +1,6 @@
 import pytest
 import logging
 import json
-from nose.tools import assert_in
 
 try:
     from urllib import urlencode
@@ -85,24 +84,24 @@ class TestLinkChecker(object):
                 break
 
         if format_in_use:
-            assert_in(format_in_use, result['url_errors'])
+            assert format_in_use in result['url_errors']
         else:
             pytest.fail("Link check failed {}".format(result['url_errors']))
 
     def test_empty_url(self, client, app):
         url = u''
         result = self.check_link(url, None, app)
-        assert_in("URL parsing failure - did not find a host name", result['url_errors'])
+        assert "URL parsing failure - did not find a host name" in result['url_errors']
 
     def test_url_with_503(self, client, app):
         url = '?status=503'
         result = self.check_link(url, client, app)
-        assert_in('Server returned HTTP error status: 503 SERVICE UNAVAILABLE', result['url_errors'])
+        assert 'Server returned HTTP error status: 503 SERVICE UNAVAILABLE' in result['url_errors']
 
     def test_url_with_404(self, client, app):
         url = '?status=404'
         result = self.check_link(url, client, app)
-        assert_in('Server returned HTTP error status: 404 NOT FOUND', result['url_errors'])
+        assert 'Server returned HTTP error status: 404 NOT FOUND' in result['url_errors']
 
     # Disabled as doesn't work
     # @with_mock_url('')

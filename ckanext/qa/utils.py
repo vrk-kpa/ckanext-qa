@@ -5,12 +5,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def init_db():
-    import ckan.model as model
-    from ckanext.qa.model import init_tables
-    init_tables(model.meta.engine)
-
-
 def update(ids, queue):
     from ckan import model
     from ckanext.qa import lib

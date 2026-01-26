@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import ckan.model as model
 import ckan.plugins as p
@@ -20,7 +21,16 @@ if toolkit.check_ckan_version(min_version='2.9.0'):
 else:
     from ckanext.qa.plugin.pylons_plugin import MixinPlugin
 
+try:
+    config_declarations = toolkit.blanket.config_declarations
+except AttributeError:
+    # CKAN 2.9 does not have config_declarations.
+    # Remove when dropping support.
+    def config_declarations(cls):
+        return cls
 
+
+@config_declarations
 class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(IPipe, inherit=True)
@@ -34,6 +44,15 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def update_config(self, config):
         toolkit.add_template_directory(config, '../templates')
+
+        # check for qsv config
+        qsv_bin = config.get('ckanext.qa.qsv_bin')
+        if qsv_bin:
+            qsv_path = Path(qsv_bin)
+            if not qsv_path.is_file():
+                log.error('ckanext.qa.qsv_bin file not found: %s', qsv_path)
+        else:
+            log.error('ckanext.qa.qsv_bin not set')
 
     # IPipe
 
@@ -85,6 +104,10 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
     # IPackageController
 
     def after_show(self, context, pkg_dict):
+        """ Old CKAN function name """
+        return self.after_dataset_show(context, pkg_dict)
+
+    def after_dataset_show(self, context, pkg_dict):
         # Insert the qa info into the package_dict so that it is
         # available on the API.
         # When you edit the dataset, these values will not show in the form,
@@ -107,3 +130,10 @@ class QAPlugin(MixinPlugin, p.SingletonPlugin, toolkit.DefaultDatasetForm):
                 del qa_dict['package_id']
                 del qa_dict['resource_id']
                 res['qa'] = qa_dict
+
+    def before_dataset_index(self, pkg_dict):
+        '''
+        remove `qa` from index
+        '''
+        pkg_dict.pop('qa', None)
+        return pkg_dict

@@ -8,7 +8,7 @@ from ckan import model
 from ckan.logic import get_action
 from ckan import plugins as p
 import ckan.lib.helpers as ckan_helpers
-from ckantoolkit.tests import factories as ckan_factories
+from ckan.tests import factories as ckan_factories
 
 import ckanext.qa.tasks
 from ckanext.qa.tasks import resource_score, extension_variants

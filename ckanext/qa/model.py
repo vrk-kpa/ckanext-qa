@@ -119,8 +119,3 @@ def aggregate_qa_for_a_dataset(qa_objs):
     if qa_dict['updated']:
         qa_dict['updated'] = qa_dict['updated'].isoformat()
     return qa_dict
-
-
-def init_tables(engine):
-    Base.metadata.create_all(engine)
-    log.info('QA database tables are set-up')
