@@ -7,12 +7,12 @@ import datetime
 from ckan import model
 from ckan.logic import get_action
 from ckan import plugins as p
-import ckan.lib.helpers as ckan_helpers
+from ckan.tests.helpers import call_action
+from ckan.lib import helpers as ckan_helpers
 from ckan.tests import factories as ckan_factories
 
 import ckanext.qa.tasks
 from ckanext.qa.tasks import resource_score, extension_variants
-import ckanext.archiver
 import ckanext.archiver.tasks
 from ckanext.qa import model as qa_model
 from ckanext.archiver.model import Archival, Status
@@ -61,11 +61,11 @@ class TestTask():
 
     def test_trigger_on_archival(cls):
         # create package
-        context = {'model': model, 'ignore_auth': True, 'session': model.Session, 'user': 'test'}
+        # context = {'model': model, 'ignore_auth': True, 'session': model.Session, 'user': 'test'}
         pkg = {'name': 'testpkg', 'license_id': 'uk-ogl', 'resources': [
             {'url': 'http://test.com/', 'format': 'CSV', 'description': 'Test'}
             ]}
-        pkg = get_action('package_create')(context, pkg)
+        pkg = call_action('package_create', **pkg)
         resource_dict = pkg['resources'][0]
         res_id = resource_dict['id']
         # create record of archival
