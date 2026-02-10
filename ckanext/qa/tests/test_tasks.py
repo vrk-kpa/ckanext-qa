@@ -15,7 +15,6 @@ from ckanext.qa.tasks import resource_score, extension_variants
 import ckanext.archiver
 import ckanext.archiver.tasks
 from ckanext.qa import model as qa_model
-from ckanext.archiver import model as archiver_model
 from ckanext.archiver.model import Archival, Status
 
 log = logging.getLogger(__name__)
