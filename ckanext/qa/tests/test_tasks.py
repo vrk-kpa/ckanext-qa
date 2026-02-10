@@ -57,7 +57,6 @@ TODAY_STR = TODAY.isoformat()
 
 
 @pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
-@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestTask():
 
     def test_trigger_on_archival(cls):
@@ -88,7 +87,6 @@ class TestTask():
 
 
 @pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
-@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestResourceScore():
     @pytest.fixture(autouse=True)
     def init_data(cls):
@@ -272,7 +270,6 @@ class TestExtensionVariants():
 
 
 @pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
-@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestSaveQaResult():
 
     @classmethod
@@ -322,7 +319,6 @@ class TestUpdatePackage():
 
 
 @pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
-@pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestUpdateResource():
 
     def test_simple(self):
