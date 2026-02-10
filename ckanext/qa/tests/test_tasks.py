@@ -5,7 +5,6 @@ import urllib
 import datetime
 
 from ckan import model
-from ckan.logic import get_action
 from ckan import plugins as p
 from ckan.tests.helpers import call_action
 from ckan.lib import helpers as ckan_helpers
