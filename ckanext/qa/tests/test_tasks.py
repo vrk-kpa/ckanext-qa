@@ -57,14 +57,9 @@ TODAY = datetime.datetime(year=2008, month=10, day=10)
 TODAY_STR = TODAY.isoformat()
 
 
-@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
 @pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestTask():
-    @pytest.fixture(autouse=True)
-    @pytest.mark.usefixtures('clean_db')
-    def init_data(cls, clean_db):
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
 
     def test_trigger_on_archival(cls):
         # create package
@@ -93,14 +88,11 @@ class TestTask():
         # TODO run celery and check it actually ran...
 
 
-@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
 @pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestResourceScore():
     @pytest.fixture(autouse=True)
-    @pytest.mark.usefixtures('clean_db')
-    def init_data(cls, clean_db):
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
+    def init_data(cls):
         cls.fake_resource = {
             'id': u'fake_resource_id',
             'url': 'http://remotesite.com/filename.csv',
@@ -280,14 +272,9 @@ class TestExtensionVariants():
         assert extension_variants('http://dept.gov.uk/coins-data-1996') == []
 
 
-@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
 @pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestSaveQaResult():
-    @pytest.fixture(autouse=True)
-    @pytest.mark.usefixtures('clean_db')
-    def init_data(cls, clean_db):
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
 
     @classmethod
     def get_qa_result(cls, **kwargs):
@@ -317,11 +304,6 @@ class TestSaveQaResult():
 @pytest.mark.usefixtures('with_plugins')
 @pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestUpdatePackage():
-    @pytest.fixture(autouse=True)
-    @pytest.mark.usefixtures('clean_db')
-    def init_data(cls, clean_db):
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
 
     def test_simple(self):
         resource = {
@@ -340,14 +322,9 @@ class TestUpdatePackage():
         assert qa.openness_score_reason == 'License not open'
 
 
-@pytest.mark.usefixtures('with_plugins')
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
 @pytest.mark.ckan_config('ckan.plugins', 'qa archiver report')
 class TestUpdateResource():
-    @pytest.fixture(autouse=True)
-    @pytest.mark.usefixtures('clean_db')
-    def init_data(cls, clean_db):
-        archiver_model.init_tables(model.meta.engine)
-        qa_model.init_tables(model.meta.engine)
 
     def test_simple(self):
         resource = {
