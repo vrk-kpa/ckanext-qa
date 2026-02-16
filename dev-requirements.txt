@@ -1,5 +1,5 @@
 -e git+http://github.com/ckan/ckanext-report.git#egg=ckanext-report
--e git+http://github.com/ckan/ckanext-archiver.git#egg=ckanext-archiver
+-e git+http://github.com/vrk-kpa/ckanext-archiver.git#egg=ckanext-archiver
 mock
 flask
 pytest-ckan
