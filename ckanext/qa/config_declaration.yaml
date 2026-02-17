@@ -1,0 +1,7 @@
+version: 1
+groups:
+  - annotation: QA settings
+    options:
+      - key: ckanext.qa.qsv_bin
+        description: Path to QSV binary
+        default: /usr/local/bin/qsv

@@ -2,12 +2,15 @@ import os
 import json
 import re
 import logging
-from ckan.plugins.toolkit import config
+from ckan.plugins import toolkit as tk
 
 from ckan import plugins as p
 from ckanext.qa.tasks import update_package, update
 
 log = logging.getLogger(__name__)
+
+config = tk.config
+enqueue_job = tk.enqueue_job
 
 _RESOURCE_FORMAT_SCORES = None
 
@@ -19,10 +22,11 @@ def compat_enqueue(name, fn, queue, args=None):
     '''
     try:
         # Try to use RQ
-        from ckan.plugins.toolkit import enqueue_job
+        log.debug('Trying to use RQ')
         enqueue_job(fn, args=args, queue=queue)
     except ImportError:
         # Fallback to Celery
+        log.debug('RQ not installed, falling back to Celery')
         import uuid
         from ckan.lib.celery_app import celery
         celery.send_task(name, args=args + [queue], task_id=str(uuid.uuid4()))
@@ -87,7 +91,7 @@ def munge_format_to_be_canonical(format_name):
 def create_qa_update_package_task(package, queue):
 
     compat_enqueue('qa.update_package', update_package, queue,  args=[package.id])
-    log.debug('QA of package put into celery queue %s: %s',
+    log.debug('QA of package put into queue %s: %s',
               queue, package.name)
 
 
@@ -99,5 +103,5 @@ def create_qa_update_task(resource, queue):
 
     compat_enqueue('qa.update', update, queue, args=[resource.id])
 
-    log.debug('QA of resource put into celery queue %s: %s/%s url=%r',
+    log.debug('QA of resource put into queue %s: %s/%s url=%r',
               queue, package.name, resource.id, resource.url)
